@@ -19,7 +19,10 @@ config()
 build()
 {
 	set -xv
+	set +e
+	echo "PWD=$PWD"
 	c++ -std=c++11 trivial.cc 2>/dev/null
+	set -e
 	if (( $? == 0 )); then
 		cxx11flags="-std=c++11"
 	else
