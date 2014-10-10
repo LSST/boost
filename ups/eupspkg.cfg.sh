@@ -18,7 +18,17 @@ config()
 
 build()
 {
-	./b2 -j $NJOBS cxxflags="-std=c++11"
+	set +e
+	c++ -std=c++11 ups/trivial.cc 2>/dev/null
+	if (( $? == 0 )); then
+		cxx11flags="-std=c++11"
+	else
+		cxx11flags="-std=c++0x"
+	fi
+	set -e
+
+	./b2 -j $NJOBS cxxflags=$cxx11flags
+	set +xv
 }
 
 install()
