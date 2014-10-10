@@ -30,9 +30,9 @@ build()
 		cxx11flags="$cxx11flags -Wno-deprecated-register"
 	fi
 	set -e
-	echo "Building boost with cxxflags=$cxx11flags"
+	echo "Building boost with cxxflags=\"$cxx11flags\""
 
-	./b2 -j $NJOBS cxxflags=\"$cxx11flags\"
+	./b2 -j $NJOBS cxxflags="\"$cxx11flags\""
 }
 
 install()
