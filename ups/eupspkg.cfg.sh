@@ -36,10 +36,3 @@ install()
 
 	install_ups
 }
-
-	c++ -std=c++11 trivial.cc 2>/dev/null
-	if (( $? == 0 )); then
-		echo 'compiler supports c++11'
-	else
-		echo 'try c++11 instead'
-	fi	
