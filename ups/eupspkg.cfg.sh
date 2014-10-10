@@ -18,7 +18,14 @@ config()
 
 build()
 {
-	./b2 -j $NJOBS cxxflags="-std=c++11"
+	c++ -std=c++11 trivial.cc 2>/dev/null
+	if (( $? == 0 )); then
+		cxx11flags="-std=c++11"
+	else
+		cxx11flags="-std=c++0x"
+	fi	
+
+	./b2 -j $NJOBS cxxflags=$cxx11flags
 }
 
 install()
@@ -29,3 +36,10 @@ install()
 
 	install_ups
 }
+
+	c++ -std=c++11 trivial.cc 2>/dev/null
+	if (( $? == 0 )); then
+		echo 'compiler supports c++11'
+	else
+		echo 'try c++11 instead'
+	fi	
