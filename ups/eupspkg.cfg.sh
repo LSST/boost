@@ -25,13 +25,6 @@ build()
 	else
 		cxxflags="-std=c++0x"
 	fi
-	c++ -o ups/test_warn_deprecated_register.o $cxxflags -Wno-deprecated-register ups/trivial.cc 2>/dev/null
-	if (( $? == 0 )); then
-		cxxflags="$cxxflags -Wno-deprecated-register"
-	fi
-	set -e
-	# double quotes are required if there are spaces in cxxflags
-	cxxflags="\"$cxxflags"\"
 	echo "Building boost with cxxflags=$cxxflags"
 
 	./b2 -j $NJOBS cxxflags=$cxxflags
