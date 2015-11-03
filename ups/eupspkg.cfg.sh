@@ -19,6 +19,12 @@ config()
 
 build()
 {
+    # Check if the user has a user-config.jam, and warn
+    if [[ -e $HOME/user-config.jam ]]; then
+        echo "WARNING: a user-config.jam file has been detectedi\n"\
+             "This can break the LSST boost build process"
+    fi
+
 	detect_compiler
 	echo "Building boost with cxxflags=$CXX_CXX11_FLAG"
 
