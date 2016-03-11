@@ -14,7 +14,7 @@ config()
 	fi
 
         # Disable unicode regex support to make the binary more portable
-	./bootstrap.sh --without-libraries=mpi --without-icu --prefix="$PREFIX" $WITH_TOOLSET
+	./bootstrap.sh --without-libraries=mpi,python --without-icu --prefix="$PREFIX" $WITH_TOOLSET
 }
 
 build()
@@ -38,9 +38,4 @@ install()
 	./b2 -j $NJOBS install
 
 	install_ups
-
-        if [[ $OSTYPE == darwin* ]]; then
-            install_name_tool -change libpython2.7.dylib @rpath/libpython2.7.dylib "$PREFIX"/lib/libboost_python.dylib
-        fi
-
 }
