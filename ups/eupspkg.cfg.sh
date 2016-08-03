@@ -15,6 +15,15 @@ config()
 
         # Disable unicode regex support to make the binary more portable
 	./bootstrap.sh --without-libraries=mpi --without-icu --prefix="$PREFIX" $WITH_TOOLSET
+
+    # On Python 3 boost can not find the include directory if it uses an architecture
+    # specifier such as 3.5m (PEP-3149). We therefore have to modify the config jam file
+    # to add the include file as determined by asking python.
+    PYTHON_VERSION=$(python -c 'import sys; print(sys.version_info.major)')
+    if [ $PYTHON_VERSION -ne 2 ]; then
+        export PYINCLUDE=$(python -c 'import distutils.sysconfig as s; print(s.get_python_inc())')
+        perl -pi -e 's/using python (.*) ;/using python $1 : $ENV{PYINCLUDE} ;/' project-config.jam
+    fi
 }
 
 build()
@@ -39,7 +48,7 @@ install()
 
 	install_ups
 
-        if [[ $OSTYPE == darwin* ]]; then
+        if [[ $OSTYPE == darwin* && -f "$PREFIX"/lib/libboost_python.dylib ]]; then
             install_name_tool -change libpython2.7.dylib @rpath/libpython2.7.dylib "$PREFIX"/lib/libboost_python.dylib
         fi
 
