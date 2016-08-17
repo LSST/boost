@@ -1,5 +1,7 @@
 # EupsPkg config file. Sourced by 'eupspkg'
 
+TAP_PACKAGE=1
+
 config()
 {
 	detect_compiler
