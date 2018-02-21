@@ -35,9 +35,38 @@ build()
     fi
 
 	detect_compiler
-	echo "Building boost with cxxflags=$CXX_CXX11_FLAG"
 
-	./b2 -j $NJOBS cxxflags=$CXX_CXX11_FLAG
+	#
+	# Try to find appropriate setting for CXX_CXX14_FLAG if not already set (to possibly empty value).
+	# This duplicates code recently added to detect_compiler in eupspkg.sh; it is here temporarily as a
+	# seatbelt to enable this build until we can be sure that eupspkg.sh has been updated from upstream.
+	#
+	# --** PLEASE REMOVE WHEN EUPS + EUPSPKG.SH ARE UPDATED FROM UPSTREAM **--
+	#
+
+	if [ -z "${CXX_CXX14_FLAG+1}" ] ; then
+		local SCXX="$(mktemp -t comptest.XXXXX)".cxx
+		echo "int main() { return 0; }" > "$SCXX"
+		local OCXX=$(mktemp -t comptest.XXXXX)
+		if   "$CXX1" "$SCXX" -std=c++14 -o "$OCXX" 2>/dev/null; then
+			CXX_CXX14_FLAG="-std=c++14"
+		elif   "$CXX1" "$SCXX" -std=c++11 -o "$OCXX" 2>/dev/null; then
+			CXX_CXX14_FLAG="-std=c++11"
+		elif "$CXX1" "$SCXX" -std=c++0x -o "$OCXX" 2>/dev/null; then
+			CXX_CXX14_FLAG="-std=c++0x"
+		else
+			CXX_CXX14_FLAG=
+		fi
+	fi
+
+	#
+	# --** END PLEASE REMOVE **--
+	#
+
+	echo "Building boost with cxxflags=$CXX_CXX14_FLAG"
+
+	./b2 -j $NJOBS cxxflags=$CXX_CXX14_FLAG
+
 }
 
 install()
