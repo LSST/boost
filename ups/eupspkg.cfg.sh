@@ -76,9 +76,4 @@ install()
 	./b2 -j $NJOBS install
 
 	install_ups
-
-        if [[ $OSTYPE == darwin* && -f "$PREFIX"/lib/libboost_python.dylib ]]; then
-            install_name_tool -change libpython2.7.dylib @rpath/libpython2.7.dylib "$PREFIX"/lib/libboost_python.dylib
-        fi
-
 }
